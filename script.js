@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Observe animated elements
     const animatedElements = document.querySelectorAll('.skill-card, .project-card');
     animatedElements.forEach(el => observer.observe(el));
-    
+
     // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
             document.querySelector(this.getAttribute('href')).scrollIntoView({
                 behavior: 'smooth'
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Contact button
     const contactButton = document.querySelector('.cta-button');
     contactButton.addEventListener('click', () => {
-        window.location.href = 'mailto:your.email@example.com';
+        window.location.href = 'mailto:@example.com';
     });
 
     // Floating icons
@@ -43,41 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrolled = window.pageYOffset;
         const hero = document.querySelector('.hero');
         const background = document.querySelector('.background-animation');
-        
+
         if (scrolled < hero.offsetHeight) {
             background.style.transform = `translateY(${scrolled * 0.5}px)`;
         }
-    });
-
-    // Particle effect
-    function createParticle(x, y) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-        document.body.appendChild(particle);
-
-        particle.animate([
-            { transform: 'scale(0)', opacity: 1 },
-            { transform: 'scale(2)', opacity: 0 }
-        ], {
-            duration: 1000,
-            easing: 'ease-out'
-        });
-
-        setTimeout(() => particle.remove(), 1000);
-    }
-
-    // Throttle mousemove events
-    let throttleTimer;
-    window.addEventListener('mousemove', (e) => {
-        if (throttleTimer) return;
-
-        throttleTimer = setTimeout(() => {
-            createParticle(e.clientX, e.clientY);
-            throttleTimer = null;
-        }, 50);
     });
 
     // Project filtering
@@ -91,36 +60,45 @@ document.addEventListener('DOMContentLoaded', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            const filterValue = button.dataset.filter;
+            const filterValue = button.dataset.filter.toLowerCase();
 
             // Clear the current projects grid
             projectsGrid.innerHTML = '';
 
-            // Filter and append projects dynamically
-            const filteredProjects = projectCards.filter(card => {
-                const tech = card.dataset.tech;
-                const isGroup = card.dataset.group === 'true';
+            // Filter and append the projects correctly
+            projectCards.forEach(card => {
+                const parentLink = card.closest('a'); // Find the <a> wrapper
 
-                switch(filterValue) {
-                    case 'all':
-                        return true;
-                    case 'group':
-                        return isGroup;
-                    case 'scratch':
-                        return tech.includes('scratch');
-                    default:
-                        return tech.includes(filterValue);
+                // Convert dataset value to array for proper matching
+                const techArray = card.dataset.tech.toLowerCase().split(' ');
+                const isGroupProject = card.dataset.group === 'true';
+
+                // Determine if project matches filter
+                let shouldShow = false;
+
+                if (filterValue === 'all') {
+                    shouldShow = true;
+                } else if (filterValue === 'group') {
+                    shouldShow = isGroupProject;
+                } else if (filterValue === 'scratch') {
+                    shouldShow = techArray.includes('scratch');
+                } else {
+                    shouldShow = techArray.includes(filterValue);
+                }
+
+                if (shouldShow) {
+                    // Clone the entire anchor element with its content
+                    const clone = parentLink.cloneNode(true);
+                    projectsGrid.appendChild(clone);
+
+                    // Re-attach observer to cloned element
+                    const clonedCard = clone.querySelector('.project-card');
+                    observer.observe(clonedCard);
                 }
             });
-
-            // Append filtered projects to the grid
-            filteredProjects.forEach(card => {
-                projectsGrid.appendChild(card.cloneNode(true));
-            });
-
-            // Re-observe the new project cards for animations
-            const newProjectCards = document.querySelectorAll('.project-card');
-            newProjectCards.forEach(card => observer.observe(card));
         });
     });
+
+    // Trigger initial filter
+    document.querySelector('.filter-btn.active').click();
 });
