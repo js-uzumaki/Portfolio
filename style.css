@@ -13,7 +13,7 @@ body {
     overflow-x: hidden;
 }
 
-.container{
+.container {
     height: 100vh;
     width: 100%;
 }
@@ -28,15 +28,15 @@ body {
     overflow: hidden;
 }
 
-.font-name{
+.font-name {
     font-family: "Emblema One", system-ui;
 }
 
-h3{
+h3 {
     color: white;
 }
 
-p{
+p {
     color: white;
 }
 
@@ -155,7 +155,7 @@ p{
     height: 48px;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
@@ -271,20 +271,20 @@ a{
     .hero-content h1 {
         font-size: 2.5rem;
     }
-    
+
     .hero-content h2 {
         font-size: 1.8rem;
     }
-    
+
     .hero-content p {
         font-size: 1.2rem;
     }
-    
+
     .profile-image {
         width: 150px;
         height: 150px;
     }
-    
+
     .skills-grid, .projects-grid {
         grid-template-columns: 1fr;
     }
@@ -317,6 +317,25 @@ a{
     background: #4a9eff;
     color: white;
     transform: scale(1.05);
+}
+
+.under{
+    text-decoration: underline;
+}
+
+.in-contact{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contacts{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
 }
 
 .project-card.hidden {
